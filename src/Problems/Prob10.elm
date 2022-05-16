@@ -35,6 +35,11 @@ import List
 import Maybe
 
 
+id : a -> a
+id x =
+    x
+
+
 runLengths : List (List a) -> List ( Int, a )
 runLengths list =
     let
@@ -49,7 +54,7 @@ runLengths list =
         maybes =
             List.map f list
     in
-    List.filterMap (\y -> y) maybes
+    List.filterMap id maybes
 
 
 runLengths2 : List (List a) -> List ( Int, a )
