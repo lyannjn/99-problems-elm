@@ -66,7 +66,7 @@ runLengths2 list =
         maybes =
             List.map f list
     in
-    List.filterMap (\y -> y) maybes
+    List.filterMap id maybes
 
 
 
