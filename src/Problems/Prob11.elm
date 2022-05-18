@@ -15,6 +15,7 @@ module Problems.Prob11 exposing (..)
 import Html
 import List
 import Maybe
+import Problems.Prob15 exposing (repeatElements)
 
 
 type RleCode a
@@ -22,14 +23,54 @@ type RleCode a
     | Single a
 
 
+takeWhile : (a -> Bool) -> List a -> List a
+takeWhile predicate list =
+    case list of
+        [] ->
+            []
+
+        x :: xs ->
+            if predicate x then
+                x :: takeWhile predicate xs
+
+            else
+                []
+
+
+dropWhile : (a -> Bool) -> List a -> List a
+dropWhile predicate list =
+    case list of
+        [] ->
+            []
+
+        x :: xs ->
+            if predicate x then
+                dropWhile predicate xs
+
+            else
+                list
+
+
 rleEncode : List a -> List (RleCode a)
 rleEncode list =
     case list of
-        a ->
-            [ Single a ]
+        [] ->
+            []
 
-        a :: _ ->
-            Run (List.map List.length list) a
+        x :: _ ->
+            let
+                first =
+                    takeWhile ((==) x) list
+
+                next =
+                    dropWhile (\y -> y == x) list
+            in
+            case List.length first of
+                1 ->
+                    Single x :: rleEncode next
+
+                n ->
+                    Run n x :: rleEncode next
 
 
 main : Html.Html a

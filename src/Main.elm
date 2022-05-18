@@ -1,7 +1,7 @@
 module Main exposing (main)
 
-import Problems.Prob10 exposing (..)
+import Problems.Prob11 exposing (..)
 
 
 main =
-    Problems.Prob10.main
+    Problems.Prob11.main

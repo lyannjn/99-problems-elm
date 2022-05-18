@@ -4418,6 +4418,13 @@ var $elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
+var $author$project$Problems$Prob11$Run = F2(
+	function (a, b) {
+		return {$: 'Run', a: a, b: b};
+	});
+var $author$project$Problems$Prob11$Single = function (a) {
+	return {$: 'Single', a: a};
+};
 var $elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -4484,185 +4491,142 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var $elm$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _v0 = f(mx);
-		if (_v0.$ === 'Just') {
-			var x = _v0.a;
-			return A2($elm$core$List$cons, x, xs);
-		} else {
-			return xs;
+var $author$project$Problems$Prob11$dropWhile = F2(
+	function (predicate, list) {
+		dropWhile:
+		while (true) {
+			if (!list.b) {
+				return _List_Nil;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (predicate(x)) {
+					var $temp$predicate = predicate,
+						$temp$list = xs;
+					predicate = $temp$predicate;
+					list = $temp$list;
+					continue dropWhile;
+				} else {
+					return list;
+				}
+			}
 		}
 	});
-var $elm$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			$elm$core$List$maybeCons(f),
-			_List_Nil,
-			xs);
-	});
-var $elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						$elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
-var $author$project$Problems$Prob10$runLengths = function (list) {
-	var f = function (x) {
-		if (!x.b) {
-			return $elm$core$Maybe$Nothing;
+var $author$project$Problems$Prob11$takeWhile = F2(
+	function (predicate, list) {
+		if (!list.b) {
+			return _List_Nil;
 		} else {
-			var y = x.a;
-			return $elm$core$Maybe$Just(
-				_Utils_Tuple2(
-					$elm$core$List$length(x),
-					y));
+			var x = list.a;
+			var xs = list.b;
+			return predicate(x) ? A2(
+				$elm$core$List$cons,
+				x,
+				A2($author$project$Problems$Prob11$takeWhile, predicate, xs)) : _List_Nil;
 		}
-	};
-	var maybes = A2($elm$core$List$map, f, list);
-	return A2(
-		$elm$core$List$filterMap,
-		function (y) {
-			return y;
-		},
-		maybes);
+	});
+var $author$project$Problems$Prob11$rleEncode = function (list) {
+	if (!list.b) {
+		return _List_Nil;
+	} else {
+		var x = list.a;
+		var next = A2(
+			$author$project$Problems$Prob11$dropWhile,
+			function (y) {
+				return _Utils_eq(y, x);
+			},
+			list);
+		var first = A2(
+			$author$project$Problems$Prob11$takeWhile,
+			$elm$core$Basics$eq(x),
+			list);
+		var _v1 = $elm$core$List$length(first);
+		if (_v1 === 1) {
+			return A2(
+				$elm$core$List$cons,
+				$author$project$Problems$Prob11$Single(x),
+				$author$project$Problems$Prob11$rleEncode(next));
+		} else {
+			var n = _v1;
+			return A2(
+				$elm$core$List$cons,
+				A2($author$project$Problems$Prob11$Run, n, x),
+				$author$project$Problems$Prob11$rleEncode(next));
+		}
+	}
 };
-var $author$project$Problems$Prob10$test = $elm$core$List$length(
+var $author$project$Problems$Prob11$test = $elm$core$List$length(
 	A2(
 		$elm$core$List$filter,
 		$elm$core$Basics$eq(false),
 		_List_fromArray(
 			[
 				_Utils_eq(
-				$author$project$Problems$Prob10$runLengths(
+				$author$project$Problems$Prob11$rleEncode(
 					_List_fromArray(
-						[
-							_List_fromArray(
-							[1, 1, 1, 1]),
-							_List_fromArray(
-							[2]),
-							_List_fromArray(
-							[5, 5]),
-							_List_fromArray(
-							[2]),
-							_List_fromArray(
-							[1])
-						])),
+						[1, 1, 1, 1, 2, 5, 5, 2, 1])),
 				_List_fromArray(
 					[
-						_Utils_Tuple2(4, 1),
-						_Utils_Tuple2(1, 2),
-						_Utils_Tuple2(2, 5),
-						_Utils_Tuple2(1, 2),
-						_Utils_Tuple2(1, 1)
+						A2($author$project$Problems$Prob11$Run, 4, 1),
+						$author$project$Problems$Prob11$Single(2),
+						A2($author$project$Problems$Prob11$Run, 2, 5),
+						$author$project$Problems$Prob11$Single(2),
+						$author$project$Problems$Prob11$Single(1)
 					])),
 				_Utils_eq(
-				$author$project$Problems$Prob10$runLengths(
+				$author$project$Problems$Prob11$rleEncode(
 					_List_fromArray(
-						[
-							_List_fromArray(
-							[2]),
-							_List_fromArray(
-							[5, 5]),
-							_List_fromArray(
-							[2]),
-							_List_fromArray(
-							[1])
-						])),
+						[2, 1, 1, 1])),
 				_List_fromArray(
 					[
-						_Utils_Tuple2(1, 2),
-						_Utils_Tuple2(2, 5),
-						_Utils_Tuple2(1, 2),
-						_Utils_Tuple2(1, 1)
+						$author$project$Problems$Prob11$Single(2),
+						A2($author$project$Problems$Prob11$Run, 3, 1)
 					])),
 				_Utils_eq(
-				$author$project$Problems$Prob10$runLengths(
+				$author$project$Problems$Prob11$rleEncode(
 					_List_fromArray(
-						[
-							_List_fromArray(
-							[1, 1, 1, 1]),
-							_List_fromArray(
-							[2]),
-							_List_fromArray(
-							[5, 5])
-						])),
+						[2, 2, 2, 1, 1, 1])),
 				_List_fromArray(
 					[
-						_Utils_Tuple2(4, 1),
-						_Utils_Tuple2(1, 2),
-						_Utils_Tuple2(2, 5)
+						A2($author$project$Problems$Prob11$Run, 3, 2),
+						A2($author$project$Problems$Prob11$Run, 3, 1)
 					])),
 				_Utils_eq(
-				$author$project$Problems$Prob10$runLengths(
+				$author$project$Problems$Prob11$rleEncode(
 					_List_fromArray(
-						[
-							_List_fromArray(
-							[1, 1, 1, 1])
-						])),
+						[1])),
 				_List_fromArray(
 					[
-						_Utils_Tuple2(4, 1)
+						$author$project$Problems$Prob11$Single(1)
 					])),
 				_Utils_eq(
-				$author$project$Problems$Prob10$runLengths(
-					_List_fromArray(
-						[
-							_List_fromArray(
-							['a', 'a', 'a', 'a']),
-							_List_fromArray(
-							['b']),
-							_List_fromArray(
-							['c', 'c']),
-							_List_fromArray(
-							['b']),
-							_List_fromArray(
-							['a'])
-						])),
-				_List_fromArray(
-					[
-						_Utils_Tuple2(4, 'a'),
-						_Utils_Tuple2(1, 'b'),
-						_Utils_Tuple2(2, 'c'),
-						_Utils_Tuple2(1, 'b'),
-						_Utils_Tuple2(1, 'a')
-					])),
-				_Utils_eq(
-				$author$project$Problems$Prob10$runLengths(
-					_List_fromArray(
-						[_List_Nil])),
+				$author$project$Problems$Prob11$rleEncode(_List_Nil),
 				_List_Nil),
 				_Utils_eq(
-				$author$project$Problems$Prob10$runLengths(
+				$author$project$Problems$Prob11$rleEncode(
 					_List_fromArray(
-						[
-							_List_Nil,
-							_List_fromArray(
-							['a', 'a'])
-						])),
+						['aa', 'aa', 'aa'])),
 				_List_fromArray(
 					[
-						_Utils_Tuple2(2, 'a')
+						A2($author$project$Problems$Prob11$Run, 3, 'aa')
 					])),
 				_Utils_eq(
-				$author$project$Problems$Prob10$runLengths(_List_Nil),
-				_List_Nil)
+				$author$project$Problems$Prob11$rleEncode(
+					_List_fromArray(
+						['aab', 'b', 'b', 'aa'])),
+				_List_fromArray(
+					[
+						$author$project$Problems$Prob11$Single('aab'),
+						A2($author$project$Problems$Prob11$Run, 2, 'b'),
+						$author$project$Problems$Prob11$Single('aa')
+					]))
 			])));
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$core$Debug$toString = _Debug_toString;
-var $author$project$Problems$Prob10$main = $elm$html$Html$text(
+var $author$project$Problems$Prob11$main = $elm$html$Html$text(
 	function () {
-		var _v0 = $author$project$Problems$Prob10$test;
+		var _v0 = $author$project$Problems$Prob11$test;
 		switch (_v0) {
 			case 0:
 				return 'Your implementation passed all tests.';
@@ -4673,7 +4637,7 @@ var $author$project$Problems$Prob10$main = $elm$html$Html$text(
 				return 'Your implementation failed ' + ($elm$core$Debug$toString(x) + ' tests.');
 		}
 	}());
-var $author$project$Main$main = $author$project$Problems$Prob10$main;
+var $author$project$Main$main = $author$project$Problems$Prob11$main;
 _Platform_export({'Main':{'init':_VirtualDom_init($author$project$Main$main)(0)(0)}});}(this));
 
   var app = Elm.Main.init({ node: document.getElementById("elm") });
